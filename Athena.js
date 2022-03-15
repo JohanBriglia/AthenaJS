@@ -3,14 +3,15 @@ import Modality from "./Modality.js";
 import Trace from "./Trace.js";
 
 export default class Athena {
-    constructor({ initialTrace, echoIterator = [], shouldLearn = () => true, slice = [] } = {}) {
+    constructor({ initialTrace, echoIterator = [], shouldLearn = () => true, slice = [], level = 0 } = {}) {
 	this._traces = [initialTrace];
 	this._echoIterator = echoIterator;
 	this._shouldLearn = shouldLearn;
 	this._slice = slice;
+	this._level = level;
 
-	// It can only make new Athena's when there is enough modalities
-	this._makeNewTrace = this.getLength() > 2
+	// It can only make new Athena's when if it isn't too deep and if there is enough modalities
+	this._makeNewTrace = level < 3 && this.getLength() > 2
 	    ? this._materializeTrace.bind(this)
 	    : this._makeNumericTrace.bind(this);
     }
@@ -103,6 +104,7 @@ export default class Athena {
 	    echoIterator: range(0, size),
 	    shouldLearn: this._shouldLearn.bind(this),
 	    slice: [position - size, position + 1],
+	    level: this._level + 1,
 	});
     }
 
