@@ -69,3 +69,8 @@ export function range(start, end) {
     let numberArray = Array.from(Array(length).keys());
     return numberArray.map((x) => addition(x, start));
 }
+
+export function randInt(max) {
+    return Math.floor(Math.random() * (max-1) + 1);
+}
+
