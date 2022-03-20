@@ -1,4 +1,5 @@
 {
+  "private": true,
   "type": "module",
   "dependencies": {
     "jasmine": "^4.0.2"

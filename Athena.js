@@ -1,4 +1,4 @@
-import { average, range } from "./helpers.js";
+import { average, range, randInt } from "./helpers.js";
 import Modality from "./Modality.js";
 import Trace from "./Trace.js";
 
@@ -10,8 +10,11 @@ export default class Athena {
 	this._slice = slice;
 	this._level = level;
 
+	this._maxNumberOfTraces = 15;
+	this._maxIndex = this._maxNumberOfTraces - 2;
+
 	// It can only make new Athena's when if it isn't too deep and if there is enough modalities
-	this._makeNewTrace = level < 3 && this.getLength() > 2
+	this._makeNewTrace = level < 5 && this.getLength() > 2
 	    ? this._materializeTrace.bind(this)
 	    : this._makeNumericTrace.bind(this);
     }
@@ -38,10 +41,7 @@ export default class Athena {
 	let activations = this._calculateActivations({ results });
 	let fluency = this._calculateFluency({ results, activations });
 	let echo = this._calculateEcho({ results, activations });
-
-	if (this._shouldLearn()) {
-	    this._learn({ probe, echo, fluency });
-	}
+	this._learn({ probe, echo, fluency });
 
 	return { fluency, echo };
     }
@@ -76,8 +76,18 @@ export default class Athena {
     }
 
     _learn(spec) {
+	if (!this._shouldLearn) return;
+
 	let newTrace = this._makeNewTrace(spec);
+	this._removePreviousTrace();
 	this.addTrace(newTrace);
+    }
+
+    _removePreviousTrace() {
+	if (this._traces.length < this._maxNumberOfTraces) return;
+
+	let indexToRemove = randInt(this._maxIndex);
+	this._traces = this._traces.filter((_, i) => i != indexToRemove);
     }
 
     _makeNumericTrace({ probe, echo }) {
