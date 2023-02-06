@@ -1,3 +1,15 @@
+import util from "util";
+
+export function allIndexes(array, value) {
+    let indexes = [];
+
+    array.forEach((x, i) => {
+	if (x === value) indexes.push(i);
+    });
+
+    return indexes;
+}
+
 export function average(array1, array2) {
     // if (array1.length != array2.length) {
     // 	console.log(`average error: different length between ${array1} and ${array2}`);
@@ -74,3 +86,10 @@ export function randInt(max) {
     return Math.floor(Math.random() * (max-1) + 1);
 }
 
+export function randomElement(array) {
+    return array[Math.floor(Math.random() * array.length)];
+}
+
+export function logArrays(arrays) {
+    console.log(util.inspect(arrays, false, null, true));
+}

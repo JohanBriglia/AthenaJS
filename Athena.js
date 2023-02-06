@@ -1,4 +1,4 @@
-import { average, range, randInt } from "./helpers.js";
+import { allIndexes, average, range, randInt, randomElement } from "./helpers.js";
 import Modality from "./Modality.js";
 import Trace from "./Trace.js";
 
@@ -10,8 +10,10 @@ export default class Athena {
 	this._slice = slice;
 	this._level = level;
 
+	//this._maxNumberOfTraces = Math.round(initialTrace.length * 1.5);
 	this._maxNumberOfTraces = 15;
-	this._maxIndex = this._maxNumberOfTraces - 2;
+	//this._maxIndex = this._maxNumberOfTraces - 2;
+	this._maxIndex = 13;
 
 	// It can only make new Athena's when if it isn't too deep and if there is enough modalities
 	this._makeNewTrace = level < 5 && this.getLength() > 2
@@ -41,7 +43,7 @@ export default class Athena {
 	let activations = this._calculateActivations({ results });
 	let fluency = this._calculateFluency({ results, activations });
 	let echo = this._calculateEcho({ results, activations });
-	this._learn({ probe, echo, fluency });
+	this._learn({ probe, echo, fluency, activations });
 
 	return { fluency, echo };
     }
@@ -79,14 +81,22 @@ export default class Athena {
 	if (!this._shouldLearn()) return;
 
 	let newTrace = this._makeNewTrace(spec);
-	this._removePreviousTrace();
+	this._removePreviousTrace(spec);
 	this.addTrace(newTrace);
     }
 
-    _removePreviousTrace() {
+    _removePreviousTrace({ activations }) {
 	if (this._traces.length < this._maxNumberOfTraces) return;
 
-	let indexToRemove = randInt(this._maxIndex);
+	// let indexToRemove = randInt(this._maxIndex);
+
+	// Removing the trace having the least activation (closer to 0) leads to little to no benefits
+	// let absActivations = activations.slice(1, this._maxIndex).map(a => Math.abs(a));
+	// let indexToRemove = randomElement(allIndexes(absActivations, Math.min(...absActivations))) + 1;
+
+	let absActivations = activations.slice();
+	let indexToRemove = randomElement(allIndexes(absActivations, Math.max(...absActivations))) + 1;
+
 	this._traces = this._traces.filter((_, i) => i != indexToRemove);
     }
 
