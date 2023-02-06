@@ -76,7 +76,7 @@ export default class Athena {
     }
 
     _learn(spec) {
-	if (!this._shouldLearn) return;
+	if (!this._shouldLearn()) return;
 
 	let newTrace = this._makeNewTrace(spec);
 	this._removePreviousTrace();
