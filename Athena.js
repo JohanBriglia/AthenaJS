@@ -118,6 +118,10 @@ export default class Athena {
 	});
     }
 
+    asNumbers() {
+	return this._traces.map((trace) => trace.asNumbers());
+    }
+
     static fromProbe(probe) {
 	return new this({
 	    initialTrace: Trace.fromProbe(probe),
