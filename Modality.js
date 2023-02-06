@@ -15,6 +15,10 @@ export default class Modality {
 	};
     }
 
+    asNumbers() {
+	return this._modality;
+    }
+
     _getSlice(probe) {
 	return probe[this._position];
     }

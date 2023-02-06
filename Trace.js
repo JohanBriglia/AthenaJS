@@ -23,6 +23,10 @@ export default class Trace {
 	};
     }
 
+    asNumbers() {
+	return this._modalities.map((modality) => modality.asNumbers());
+    }
+
     static fromProbe(probe) {
 	return new this({
 	    modalities: probe.map((modality, index) => {
