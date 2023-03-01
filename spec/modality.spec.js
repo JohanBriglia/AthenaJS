@@ -3,14 +3,14 @@ import Modality from "../Modality.js";
 describe("Modality", () => {
     describe("inject", () => {
 	it("returns infimum and modality as result", () => {
-	    let probe = [0, 0.5];
-	    let modalityValue = -0.25;
+	    let probe = [[0], [0.5]];
+	    let modalityValue = [-0.25];
 	    let position = 1;
 
 	    let modality = new Modality({ modality: modalityValue, position });
 	    let result = modality.inject(probe);
 
-	    expect(result.fluency).toBe(-0.25);
+	    expect(result.fluency).toEqual([-0.25]);
 	    expect(result.echo).toEqual([modalityValue]);
 	});
     });

@@ -25,9 +25,9 @@ describe("Athena", () => {
 
     describe("inject", () => {
 	it("returns the correct results", () => {
-	    let probe = [1, -1, 1, 0, -1];
-	    let initialTrace = Trace.fromProbe([0, 0.5, -0.25]);
-	    let secondTrace = Trace.fromProbe([1, -0.6, 0.7]);
+	    let probe = [[1], [-1], [1], [0], [-1]];
+	    let initialTrace = Trace.fromProbe([[0], [0.5], [-0.25]]);
+	    let secondTrace = Trace.fromProbe([[1], [-0.6], [0.7]]);
 	    let echoIterator = [0, 1, 2];
 	    let shouldLearn = () => false;
 	    let slice = [2, 5];
@@ -43,8 +43,8 @@ describe("Athena", () => {
 	});
 
 	it("learns an Athena and a modality in a new Trace when it is supposed to", () => {
-	    let probe = [1, 0, 1, 1, -1];
-	    let initialTrace = Trace.fromProbe([1, 1, -0.25]);
+	    let probe = [[1], [0], [1], [1], [-1]];
+	    let initialTrace = Trace.fromProbe([[1], [1], [-0.25]]);
 	    let echoIterator = [0, 1, 2];
 	    let shouldLearn = () => true;
 	    let slice = [2, 5];
@@ -66,8 +66,8 @@ describe("Athena", () => {
 	});
 
 	it("learns Modality's in a new Trace when it is not supposed to reproduce", () => {
-	    let probe = [1, -1, 1, 0, -1];
-	    let initialTrace = Trace.fromProbe([0, 0.5]);
+	    let probe = [[1], [-1], [1], [0], [-1]];
+	    let initialTrace = Trace.fromProbe([[0], [0.5]]);
 	    let echoIterator = [0, 1];
 	    let shouldLearn = () => true;
 	    let slice = [2, 4];
@@ -89,8 +89,8 @@ describe("Athena", () => {
 	});
 
 	it("doesn't learn when it is not supposed to", () => {
-	    let probe = [1, -1, 1, 0, -1];
-	    let initialTrace = Trace.fromProbe([0, 0.5, -0.25]);
+	    let probe = [[1], [-1], [1], [0], [-1]];
+	    let initialTrace = Trace.fromProbe([[0], [0.5], [-0.25]]);
 	    let echoIterator = [0, 1, 2];
 	    let shouldLearn = () => false;
 	    let slice = [2, 5];
@@ -107,16 +107,16 @@ describe("Athena", () => {
 
     describe("_getSlice", () => {
 	it("should return the proper slice", () => {
-	    let probe = [1, 2, 3, 4, 5];
+	    let probe = [[1], [2], [3], [4], [5]];
 	    let slice = [2, 4];
 
 	    let athena = new Athena({ slice });
 
-	    expect(athena._getSlice(probe)).toEqual([3, 4]);
+	    expect(athena._getSlice(probe)).toEqual([[3], [4]]);
 	});
 
 	it("should return the whole probe is slice isn't initialized", () => {
-	    let probe = [1, 2, 3, 4, 5];
+	    let probe = [[1], [2], [3], [4], [5]];
 
 	    let athena = new Athena();
 
@@ -126,7 +126,7 @@ describe("Athena", () => {
 
     describe("_calculateActivations", () => {
 	it("returns a list of activations", () => {
-	    let results = [{ similarity: 0.5}, { similarity: -0.7 }];
+	    let results = [{ similarity: [0.5]}, { similarity: [-0.7] }];
 
 	    let athena = new Athena();
 	    let activations = athena._calculateActivations({ results });
@@ -138,8 +138,8 @@ describe("Athena", () => {
 
     describe("_calculateFluency", () => {
 	it("returns the corresponding fluency", () => {
-	    let results = [{ similarity: 0.5}, { similarity: -0.7 }];
-	    let activations = [0.417, -0.583];
+	    let results = [{ similarity: [0.5]}, { similarity: [-0.7] }];
+	    let activations = [[0.417], [-0.583]];
 
 	    let athena = new Athena();
 
@@ -150,11 +150,11 @@ describe("Athena", () => {
     describe("_calculateEcho", () => {
 	it("returns the corresponding echo", () => {
 	    let results = [
-		{ echo: [0.5, 0.7, -0.6], similarity: 0.5},
-		{ echo: [-0.7, -0.4, 0.7], similarity: -0.7 }
+		{ echo: [[0.5], [0.7], [-0.6]], similarity: [0.5]},
+		{ echo: [[-0.7], [-0.4], [0.7]], similarity: [-0.7] }
 	    ];
 
-	    let activations = [0.417, -0.583];
+	    let activations = [[0.417], [-0.583]];
 	    let echoIterator = [0, 1, 2];
 
 	    let athena = new Athena({ echoIterator });
@@ -168,7 +168,7 @@ describe("Athena", () => {
 
     describe("_makeModality", () => {
 	it("makes a base Modality if there is one modality", () => {
-	    let modalities = [0.5];
+	    let modalities = [[0.5]];
 	    let position = 3;
 
 	    let athena = new Athena();
@@ -180,7 +180,7 @@ describe("Athena", () => {
 	});
 
 	it("makes a new Athena if there is several modalities", () => {
-	    let modalities = [0.5, -0.7, 0];
+	    let modalities = [[0.5], [-0.7], [0]];
 	    let position = 3;
 	    let shouldLearn = jasmine.createSpy("shouldLearn");
 	    let probe = jasmine.createSpy("probe");

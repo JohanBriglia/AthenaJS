@@ -1,5 +1,7 @@
-import { average, last } from "./helpers.js";
+import { addArrays, average, last, parse } from "./helpers.js";
 import Modality from "./Modality.js";
+
+const averageThreshold = 0.5;
 
 export default class Trace {
     constructor({ modalities }) {
@@ -8,19 +10,23 @@ export default class Trace {
     }
 
     inject(probe) {
-	let likelyhood = 0;
+	let likelyhood = Array(this.getMatricialLength()).fill(0);
 	let traceEcho = [];
 
 	this._modalities.forEach((modality) => {
 	    let { fluency, echo } = modality.inject(probe);
-	    likelyhood += fluency;
+	    likelyhood = addArrays(likelyhood, fluency);
 	    traceEcho = [...traceEcho, ...echo];
 	});
 
 	return {
-	    similarity: likelyhood / this._length,
-	    echo: traceEcho
+	    similarity: likelyhood.map((x) => x / this._length),
+	    echo: traceEcho,
 	};
+    }
+
+    getMatricialLength() {
+	return this._modalities[0].getMatricialLength();
     }
 
     asNumbers() {
@@ -37,9 +43,9 @@ export default class Trace {
 
     static materialize({ probe, echo, fluency, modalityBuilder }) {
 	let modalities = this._makeModalities({
-	    values: average(probe, echo),
+	    values: probe.map((x, i) => average(x, echo[i])),
 	    echo: [...echo],
-	    threshold: Math.abs(fluency),
+	    threshold: fluency.map(Math.abs),
 	    modalityBuilder,
 	});
 
@@ -53,9 +59,10 @@ export default class Trace {
 
 	for (let j = 0; j < protoLength; j++) {
 	    modalityValues.push(values[j]);
-	    let difference = Math.abs(echo.shift() - echo[0]);
+	    let difference = parse(echo.shift(), echo[0], (a, b) => Math.abs(a - b));
+	    let shouldMakeModality = parse(difference, threshold, (a, b) => a >= b ? 1 : 0);
 
-	    if (difference > threshold) {
+	    if ((shouldMakeModality.reduce((a, b) => a+b) / shouldMakeModality.length) > averageThreshold) {
 		modalities.push(modalityBuilder({ modalities: [...modalityValues], position: j }));
 		modalityValues = [];
 	    }

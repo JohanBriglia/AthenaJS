@@ -1,4 +1,4 @@
-import { allIndexes, average, range, randInt, randomElement } from "./helpers.js";
+import { allIndexes, average, parse, range, randInt, randomElement } from "./helpers.js";
 import Modality from "./Modality.js";
 import Trace from "./Trace.js";
 
@@ -29,6 +29,10 @@ export default class Athena {
 	return this._echoIterator.length;
     }
 
+    getMatricialLength() {
+	return this._traces[0].getMatricialLength();
+    }
+
     addTrace(trace) {
 	this._traces.push(trace);
     }
@@ -54,25 +58,25 @@ export default class Athena {
 
     _calculateActivations({ results }) {
 	let intensity = results.reduce((i, { similarity }) =>
-	    i + Math.abs(similarity),
-	    0
-	) || 1;
+	    i.map((x, index) => x + Math.abs(similarity[index])),
+	    Array(results[0].similarity.length).fill(0)
+	).map((i) => i || 1);
 
-	return results.map(({ similarity }) => similarity / intensity);
+	return results.map(({ similarity }) => similarity.map((x, i) => x / intensity[i]));
     }
 
     _calculateFluency({ results, activations }) {
 	return results.reduce((fluency, { similarity }, index) =>
-	    fluency + (activations[index] * Math.abs(similarity)),
-	    0
+	    fluency.map((f, i) => f + (activations[index][i] * Math.abs(similarity[i]))),
+	    Array(results[0].similarity.length).fill(0)
 	);
     }
 
     _calculateEcho({ results, activations }) {
 	return this._echoIterator.map((j) =>
 	    results.reduce((echoJ, { echo }, i) =>
-		echoJ + (echo[j] * activations[i]),
-		0
+		echoJ.map((eachEchoJ, index) => eachEchoJ + (echo[j][index] * activations[i][index])),
+		Array(results[0].echo[0].length).fill(0)
 	    )
 	);
     }
@@ -102,7 +106,7 @@ export default class Athena {
     }
 
     _makeNumericTrace({ probe, echo }) {
-	return Trace.fromProbe(average(probe, echo));
+	return Trace.fromProbe(parse(probe, echo, average));
     }
 
     _materializeTrace({ probe, echo, fluency }) {
@@ -115,8 +119,9 @@ export default class Athena {
     }
 
     _makeModality({ modalities, position }) {
-	if (modalities.length === 1)
+	if (modalities.length === 1) {
 	    return new Modality({ modality: modalities[0], position });
+	}
 
 	let size = modalities.length - 1;
 

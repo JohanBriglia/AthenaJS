@@ -31,7 +31,6 @@ export function double(probes) {
     );
 }
 
-
 export function last(array) {
     // if (array.length === 0) {
     // 	console.log("array is empty");
@@ -49,6 +48,13 @@ export function makeIntegerProbes({ size }) {
     });
 }
 
+export function makeMatrixProbes({ sizes, number = sizes[0] }) {
+    return range(0, number - 1).map((index) => {
+	let probe = Array(sizes[0]).fill(Array(sizes[1]).fill(0));
+	probe[index] = Array(sizes[1]).fill(1);
+	return probe;
+    });
+}
 
 export function makeProbes(numberOfProbes, numberOfModalities) {
     return range(1, numberOfProbes).map(() =>
@@ -92,4 +98,12 @@ export function randomElement(array) {
 
 export function logArrays(arrays) {
     console.log(util.inspect(arrays, false, null, true));
+}
+
+export function addArrays(array1, array2) {
+    return array1.map((x, i) => x + array2[i]);
+}
+
+export function parse(array1, array2, func) {
+    return array1.map((item, index) => func(item, array2[index]));
 }
