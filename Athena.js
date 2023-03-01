@@ -81,21 +81,22 @@ export default class Athena {
 	if (!this._shouldLearn()) return;
 
 	let newTrace = this._makeNewTrace(spec);
-	this._removePreviousTrace(spec);
+	this._removePreviousTrace();
 	this.addTrace(newTrace);
     }
 
-    _removePreviousTrace({ activations }) {
+    _removePreviousTrace() {
 	if (this._traces.length < this._maxNumberOfTraces) return;
 
-	// let indexToRemove = randInt(this._maxIndex);
+	let indexToRemove = randInt(this._maxIndex);
 
 	// Removing the trace having the least activation (closer to 0) leads to little to no benefits
 	// let absActivations = activations.slice(1, this._maxIndex).map(a => Math.abs(a));
 	// let indexToRemove = randomElement(allIndexes(absActivations, Math.min(...absActivations))) + 1;
 
-	let absActivations = activations.slice();
-	let indexToRemove = randomElement(allIndexes(absActivations, Math.max(...absActivations))) + 1;
+	// Same for max activation
+	// let absActivations = activations.slice();
+	// let indexToRemove = randomElement(allIndexes(absActivations, Math.max(...absActivations))) + 1;
 
 	this._traces = this._traces.filter((_, i) => i != indexToRemove);
     }
