@@ -114,10 +114,10 @@ export default class Athena {
     }
 
     _makeModality({ modalities, position }) {
-	let size = modalities.length - 1;
-
-	if (size === 0)
+	if (modalities.length === 1)
 	    return new Modality({ modality: modalities[0], position });
+
+	let size = modalities.length - 1;
 
 	return new this.constructor({
 	    initialTrace: Trace.fromProbe(modalities),
