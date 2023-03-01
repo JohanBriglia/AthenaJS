@@ -1,5 +1,6 @@
 import { allIndexes, average, range, randInt, randomElement } from "./helpers.js";
 import Modality from "./Modality.js";
+//import Modalities from "./Modalities.js";
 import Trace from "./Trace.js";
 
 export default class Athena {
@@ -117,6 +118,7 @@ export default class Athena {
 	let size = modalities.length - 1;
 
 	if (size === 0)
+	    // return Modalities.get(modalities[0], position);
 	    return new Modality({ modality: modalities[0], position });
 
 	return new this.constructor({

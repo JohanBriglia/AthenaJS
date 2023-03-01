@@ -1,5 +1,6 @@
 import { average, last } from "./helpers.js";
 import Modality from "./Modality.js";
+//import Modalities from "./Modalities.js";
 
 export default class Trace {
     constructor({ modalities }) {
@@ -30,8 +31,9 @@ export default class Trace {
     static fromProbe(probe) {
 	return new this({
 	    modalities: probe.map((modality, index) => {
-		return new Modality({ modality, position: index });}
-	    ),
+		// return Modalities.get(modality, index);
+		return new Modality({ modality, position: index });
+	    }),
 	});
     }
 
