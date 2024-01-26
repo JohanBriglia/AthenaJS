@@ -5,7 +5,7 @@ let allResults = [];
 let numberOfTests = 1;
 
 range(1, numberOfTests).forEach(() => {
-    let probesToTest = makeMatrixProbes({ sizes: [10, 2] });
+    let probesToTest = makeMatrixProbes({ sizes: [10, 10] });
     let probesToLearn = double([...probesToTest]);
     // probesToLearn = [...probesToLearn, ...probesToLearn];
     // probesToLearn = [...probesToLearn, ...probesToLearn];
@@ -41,7 +41,7 @@ range(1, numberOfTests).forEach(() => {
     // let results = [firstResult, ...athena.injectProbes(probesToTest)];
     allResults.push(results);
     // console.log(athena._traces[1].asNumbers());
-    logArrays(athena);
+    //logArrays(athena);
 });
 
 let round = (number) => {

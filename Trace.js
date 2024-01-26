@@ -1,7 +1,7 @@
 import { addArrays, average, last, parse } from "./helpers.js";
 import Modality from "./Modality.js";
 
-const averageThreshold = 0.5;
+const averageThreshold = 0.08;
 
 export default class Trace {
     constructor({ modalities }) {
@@ -33,6 +33,10 @@ export default class Trace {
 	return this._modalities.map((modality) => modality.asNumbers());
     }
 
+    countAthenas() {
+	return this._modalities.reduce((total, modality) => total + modality.countYourself(), 0);
+    }
+
     static fromProbe(probe) {
 	return new this({
 	    modalities: probe.map((modality, index) => {
@@ -56,13 +60,16 @@ export default class Trace {
 	let protoLength = echo.length - 1;
 	let modalities = [];
 	let modalityValues = [];
-
+	
 	for (let j = 0; j < protoLength; j++) {
 	    modalityValues.push(values[j]);
 	    let difference = parse(echo.shift(), echo[0], (a, b) => Math.abs(a - b));
-	    let shouldMakeModality = parse(difference, threshold, (a, b) => a >= b ? 1 : 0);
+	    let shouldMakeModality = parse(difference, threshold, (a, b) => a > b ? 1 : 0);
+	    let percentage = shouldMakeModality.reduce((a, b) => a+b) / shouldMakeModality.length;
+	    
+	    //if (JSON.stringify(values) === "[[0.5],[0],[0],[0]]") console.log(difference, shouldMakeModality);
 
-	    if ((shouldMakeModality.reduce((a, b) => a+b) / shouldMakeModality.length) > averageThreshold) {
+	    if (percentage > averageThreshold) {
 		modalities.push(modalityBuilder({ modalities: [...modalityValues], position: j }));
 		modalityValues = [];
 	    }

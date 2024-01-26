@@ -38,7 +38,10 @@ export default class Athena {
     }
 
     injectProbes(probes) {
-	return probes.map((probe) => this.inject(probe));
+	return probes.map((probe) => {
+	    console.log("loading...");
+	    return this.inject(probe);
+	});
     }
 
     inject(initialProbe) {
@@ -50,6 +53,10 @@ export default class Athena {
 	this._learn({ probe, echo, fluency, activations });
 
 	return { fluency, echo };
+    }
+
+    countYourself() {
+	return this._traces.reduce((total, trace) => total + trace.countAthenas(), 1);
     }
 
     _getSlice(probe) {
@@ -85,7 +92,7 @@ export default class Athena {
 	if (!this._shouldLearn()) return;
 
 	let newTrace = this._makeNewTrace(spec);
-	this._removePreviousTrace();
+	//this._removePreviousTrace();
 	this.addTrace(newTrace);
     }
 
