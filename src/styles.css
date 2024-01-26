@@ -9,11 +9,11 @@
   padding: 0;
   text-align: center;
   width: 34px;
+}
 
-  &.empty {
-      border: 1px transparent;
-      margin-left: 1px;
-  }
+.square.empty {
+    border: 1px transparent;
+    margin-left: 1px;
 }
 
 .space {
