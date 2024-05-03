@@ -8,7 +8,7 @@ const maxIndex = 13;
 const maxLevel = 5;
 
 export default class Athena {
-    constructor({ initialTrace, echoIterator, shouldLearn = () => true, slice = [], level = 0 } = {}) {
+    constructor({ initialTrace, echoIterator, shouldLearn, slice = [], level = 0 }) {
 	this._traces = [initialTrace];
 	this._echoIterator = echoIterator;
 	this._shouldLearn = shouldLearn;
@@ -136,6 +136,7 @@ export default class Athena {
 	return new this({
 	    initialTrace: Trace.fromProbe(probe),
 	    echoIterator: echoIterators.get(probe.length - 1),
+	    shouldLearn: () => true,
 	});
     }
 
