@@ -1,4 +1,4 @@
-import { double, logArrays, makeIntegerProbes, range } from "./helpers.js";
+import { double, makeIntegerProbes, range } from "./helpers.js";
 import Athena from "./Athena.js";
 
 let allResults = [];

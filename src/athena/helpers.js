@@ -1,4 +1,4 @@
-import util from "util";
+// import util from "util";
 
 export function allIndexes(array, value) {
     let indexes = [];
@@ -90,6 +90,6 @@ export function randomElement(array) {
     return array[Math.floor(Math.random() * array.length)];
 }
 
-export function logArrays(arrays) {
-    console.log(util.inspect(arrays, false, null, true));
-}
+// export function logArrays(arrays) {
+//     console.log(util.inspect(arrays, false, null, true));
+// }
