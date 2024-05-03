@@ -94,6 +94,13 @@ export function randomElement(array) {
     return array[Math.floor(Math.random() * array.length)];
 }
 
+export function repeat({ probes, numberOfRepetitions }) {
+    return makeNumberArray(numberOfRepetitions).reduce((allProbes) =>
+	[...allProbes, ...probes],
+	[]
+    );
+}
+
 // export function logArrays(arrays) {
 //     console.log(util.inspect(arrays, false, null, true));
 // }

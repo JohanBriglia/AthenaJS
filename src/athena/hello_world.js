@@ -1,15 +1,20 @@
-import { double, makeIntegerProbes, range } from "./helpers.js";
+import { double, makeIntegerProbes, range, repeat } from "./helpers.js";
 import Athena from "./Athena.js";
 
 let allResults = [];
+let numberOfModalities = 10;
+let numberOfProbesToLearn = 40; // must be a multiple of numberOfModalities (min 2x)
+let numberOfRepetitions = numberOfProbesToLearn / (numberOfModalities * 2);
 let numberOfTests = 3;
 
-range(1, numberOfTests).forEach(() => {
-    let probesToTest = makeIntegerProbes({ size: 10 });
+console.log("tested ", numberOfTests, " times");
+console.log(numberOfModalities, " modalities");
+console.log(numberOfProbesToLearn, " probes to learn");
+
+range(1, numberOfTests).forEach((x) => {
+    let probesToTest = makeIntegerProbes({ size: numberOfModalities });
     let probesToLearn = double([...probesToTest]);
-    // probesToLearn = [...probesToLearn, ...probesToLearn];
-    // probesToLearn = [...probesToLearn, ...probesToLearn];
-    // console.log(probesToLearn.length);
+    probesToLearn = repeat({ probes: probesToLearn, numberOfRepetitions });
     let shouldLearn = true;
 
     let athena = Athena.fromProbe(probesToLearn.shift());
@@ -41,6 +46,7 @@ range(1, numberOfTests).forEach(() => {
 
     // let results = [firstResult, ...athena.injectProbes(probesToTest)];
     allResults.push(results);
+    console.log("test ", x, " done");
 });
 
 let round = (number) => {
