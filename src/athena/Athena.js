@@ -1,9 +1,10 @@
 import { allIndexes, average, range, randInt, randomElement } from "./helpers.js";
+import echoIterators from "./echoIterators.js";
 import Modality from "./Modality.js";
 import Trace from "./Trace.js";
 
 export default class Athena {
-    constructor({ initialTrace, echoIterator = [], shouldLearn = () => true, slice = [], level = 0 } = {}) {
+    constructor({ initialTrace, echoIterator, shouldLearn = () => true, slice = [], level = 0 } = {}) {
 	this._traces = [initialTrace];
 	this._echoIterator = echoIterator;
 	this._shouldLearn = shouldLearn;
@@ -121,7 +122,7 @@ export default class Athena {
 
 	return new this.constructor({
 	    initialTrace: Trace.fromProbe(modalities),
-	    echoIterator: range(0, size),
+	    echoIterator: echoIterators.get(size),
 	    shouldLearn: this._shouldLearn.bind(this),
 	    slice: [position - size, position + 1],
 	    level: this._level + 1,
@@ -135,14 +136,12 @@ export default class Athena {
     static fromProbe(probe) {
 	return new this({
 	    initialTrace: Trace.fromProbe(probe),
-	    echoIterator: range(0, probe.length - 1),
+	    echoIterator: echoIterators.get(probe.length - 1),
 	});
     }
 
-    static fromProbes(probes) {
-	let copy = [...probes];
-	let athena = this.fromProbe(copy.shift());
-	athena.injectProbes(copy);
-	return athena;
+    static makeGlobalFromProbe(probe) {
+	echoIterators.initializeIterators(probe.length);
+	return this.fromProbe(probe);
     }
 }

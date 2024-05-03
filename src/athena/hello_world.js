@@ -17,7 +17,7 @@ range(1, numberOfTests).forEach((x) => {
     probesToLearn = repeat({ probes: probesToLearn, numberOfRepetitions });
     let shouldLearn = true;
 
-    let athena = Athena.fromProbe(probesToLearn.shift());
+    let athena = Athena.makeGlobalFromProbe(probesToLearn.shift());
     athena.setShouldLearn(() => shouldLearn);
     athena.injectProbes(probesToLearn);
 
