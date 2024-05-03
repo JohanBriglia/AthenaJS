@@ -42,7 +42,7 @@ export function last(array) {
 }
 
 export function makeIntegerProbes({ size }) {
-    return range(0, size - 1).map((index) => {
+    return makeNumberArray(size).map((index) => {
 	let probe = Array(size).fill(0);
 	probe[index] = 1;
 	return probe;
@@ -78,8 +78,12 @@ export function range(start, end) {
 	: (x, start) => start - x; 
     
     let length = Math.abs(end - start) + 1;
-    let numberArray = Array.from(Array(length).keys());
+    let numberArray = makeNumberArray(length);
     return numberArray.map((x) => addition(x, start));
+}
+
+export function makeNumberArray(length) {
+    return Array.from(Array(length).keys());
 }
 
 export function randInt(max) {
