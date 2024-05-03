@@ -114,16 +114,14 @@ export default class Athena {
     }
 
     _makeModality({ modalities, position }) {
-	let size = modalities.length - 1;
-
-	if (size === 0)
+	if (modalities.length === 1)
 	    return new Modality({ modality: modalities[0], position });
 
 	return new this.constructor({
 	    initialTrace: Trace.fromProbe(modalities),
-	    echoIterator: echoIterators.get(size),
+	    echoIterator: echoIterators.get(modalities.length),
 	    shouldLearn: this._shouldLearn.bind(this),
-	    slice: [position - size, position + 1],
+	    slice: [position - modalities.length + 1, position + 1],
 	    level: this._level + 1,
 	});
     }
@@ -135,7 +133,7 @@ export default class Athena {
     static fromProbe(probe) {
 	return new this({
 	    initialTrace: Trace.fromProbe(probe),
-	    echoIterator: echoIterators.get(probe.length - 1),
+	    echoIterator: echoIterators.get(probe.length),
 	    shouldLearn: () => true,
 	});
     }

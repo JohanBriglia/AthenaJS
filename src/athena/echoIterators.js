@@ -13,7 +13,7 @@ class EchoIterators {
 	if (this._iterators.length >= maxNumberOfModalities) return;
 
 	let iterators = range(1, maxNumberOfModalities).map(
-	    (numberOfModalities) => makeNumberArray(numberOfModalities + 1)
+	    (numberOfModalities) => makeNumberArray(numberOfModalities)
 	);
 
 	// use an empty iterator for 0 modalities
