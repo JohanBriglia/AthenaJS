@@ -1,4 +1,4 @@
-import Modality from "../Modality.js";
+import Modality from "../src/athena/Modality.js";
 
 describe("Modality", () => {
     describe("inject", () => {
