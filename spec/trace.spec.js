@@ -1,6 +1,6 @@
-import Athena from "../Athena.js";
-import Modality from "../Modality.js";
-import Trace from "../Trace.js";
+import Athena from "../src/athena/Athena.js";
+import Modality from "../src/athena/Modality.js";
+import Trace from "../src/athena/Trace.js";
 
 describe("Trace", () => {
     describe("inject", () => {
@@ -43,7 +43,7 @@ describe("Trace", () => {
 	    let probe = [-1, -0.5, -0.5];
 	    let echo = [0, 0, 1];
 	    let fluency = -0.5;
-	    let athena = new Athena();
+	    let athena = Athena.makeGlobalFromProbe(probe);
 	    let modalityBuilder = athena._makeModality.bind(athena);
 
 	    let trace = Trace.materialize({ probe, echo, fluency, modalityBuilder });

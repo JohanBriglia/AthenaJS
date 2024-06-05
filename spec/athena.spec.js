@@ -1,15 +1,16 @@
-import Athena from "../Athena.js";
-import Modality from "../Modality.js";
-import Trace from "../Trace.js";
+import Athena from "../src/athena/Athena.js";
+import echoIterators from "../src/athena/echoIterators.js";
+import Modality from "../src/athena/Modality.js";
+import Trace from "../src/athena/Trace.js";
 
 describe("Athena", () => {
     describe("constructor", () => {
 	it("uses the initialTrace as first trace", () => {
-	    let initialTrace = jasmine.createSpy("initialTrace");
+	    let probe = [0, 1, -1];
 
-	    let athena = new Athena({ initialTrace });
+	    let athena = makeAthena({ probe });
 
-	    expect(athena._traces).toEqual([initialTrace]);
+	    expect(athena._traces[0].asNumbers()).toEqual(probe);
 	});
     });
 
@@ -110,7 +111,8 @@ describe("Athena", () => {
 	    let probe = [1, 2, 3, 4, 5];
 	    let slice = [2, 4];
 
-	    let athena = new Athena({ slice });
+	    let echoIterator = makeIterator(probe.length);
+	    let athena = new Athena({ echoIterator, slice });
 
 	    expect(athena._getSlice(probe)).toEqual([3, 4]);
 	});
@@ -118,7 +120,8 @@ describe("Athena", () => {
 	it("should return the whole probe is slice isn't initialized", () => {
 	    let probe = [1, 2, 3, 4, 5];
 
-	    let athena = new Athena();
+	    let echoIterator = makeIterator(probe.length);
+	    let athena = new Athena({ echoIterator });
 
 	    expect(athena._getSlice(probe)).toEqual(probe);
 	});
@@ -128,7 +131,7 @@ describe("Athena", () => {
 	it("returns a list of activations", () => {
 	    let results = [{ similarity: 0.5}, { similarity: -0.7 }];
 
-	    let athena = new Athena();
+	    let athena = makeAthena();
 	    let activations = athena._calculateActivations({ results });
 
 	    expect(activations[0]).toBeCloseTo(0.417, 3);
@@ -141,7 +144,7 @@ describe("Athena", () => {
 	    let results = [{ similarity: 0.5}, { similarity: -0.7 }];
 	    let activations = [0.417, -0.583];
 
-	    let athena = new Athena();
+	    let athena = makeAthena();
 
 	    expect(athena._calculateFluency({ results, activations })).toBeCloseTo(-0.20, 2);
 	});
@@ -171,7 +174,7 @@ describe("Athena", () => {
 	    let modalities = [0.5];
 	    let position = 3;
 
-	    let athena = new Athena();
+	    let athena = makeAthena();
 	    let modality = athena._makeModality({ modalities, position });
 
 	    expect(modality.constructor).toBe(Modality);
@@ -185,7 +188,11 @@ describe("Athena", () => {
 	    let shouldLearn = jasmine.createSpy("shouldLearn");
 	    let probe = jasmine.createSpy("probe");
 
-	    let athena = new Athena({ shouldLearn: () => shouldLearn });
+	    let athena = new Athena({
+		shouldLearn: () => shouldLearn,
+		echoIterator: makeIterator(modalities.length),
+	    });
+
 	    spyOn(Trace, "fromProbe").and.returnValue(probe);
 	    let modality = athena._makeModality({ modalities, position });
 
@@ -196,4 +203,13 @@ describe("Athena", () => {
 	    expect(modality._slice).toEqual([1, 4]);
 	});
     });
+
+    function makeIterator(size) {
+	echoIterators.initializeIterators(size);
+	return echoIterators.get(size);
+    }
+
+    function makeAthena({ probe = [1, -1, 0] } = {}) {
+	return Athena.makeGlobalFromProbe(probe);
+    }
 });
