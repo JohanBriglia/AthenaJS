@@ -45,7 +45,7 @@ export default class Athena {
 	let echo = this._calculateEcho({ results, activations });
 	this._learn({ probe, echo, fluency, activations });
 
-	return { fluency, echo };
+	return { probe, results, activations, fluency, echo };
     }
 
     _getSlice(probe) {
