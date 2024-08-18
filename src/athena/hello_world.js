@@ -19,9 +19,9 @@ range(1, numberOfTests).forEach((x) => {
     let shouldLearn = true;
 
     let firstProbe = probesToLearn.shift();
-    let athena = new CoAthenas({ firstProbe, numberOfAthenas: 3 });
-    // let athena = Athena.makeGlobalFromProbe(firstProbe);
-    // athena.setShouldLearn(() => shouldLearn);
+    // let athena = new CoAthenas({ firstProbe, numberOfAthenas: 3 });
+    let athena = Athena.makeGlobalFromProbe(firstProbe);
+    athena.setShouldLearn(() => shouldLearn);
     athena.injectProbes(probesToLearn);
 
     shouldLearn = false;
