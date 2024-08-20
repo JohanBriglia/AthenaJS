@@ -106,13 +106,12 @@ export default class Athena {
 	if (!this._shouldLearn()) return;
 
 	let newTrace = this._makeNewTrace(spec);
+	this.addTrace(newTrace);
 
-	if (this._traces.length == maxNumberOfTraces) {
+	if (this._traces.length > maxNumberOfTraces) {
 	    //this._removePreviousTrace(spec);
 	    this._splitTraces();
 	}
-
-	this.addTrace(newTrace);
     }
 
     _removePreviousTrace({ activations }) {
