@@ -15,6 +15,10 @@ export default class Modality {
 	};
     }
 
+    asUpgradedLevel() {
+	return this;
+    }
+
     asNumbers() {
 	return this._modality;
     }

@@ -4,7 +4,6 @@ import Modality from "./Modality.js";
 export default class Trace {
     constructor({ modalities }) {
 	this._modalities = modalities;
-	this._length = modalities.length;
     }
 
     inject(probe) {
@@ -18,9 +17,15 @@ export default class Trace {
 	});
 
 	return {
-	    similarity: likelyhood / this._length,
+	    similarity: likelyhood / this._modalities.length,
 	    echo: traceEcho
 	};
+    }
+
+    upgradeLevel(level) {
+	this._modalities = this._modalities.flatMap((modality) =>
+	    modality.asUpgradedLevel()
+	);
     }
 
     asNumbers() {
