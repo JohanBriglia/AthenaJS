@@ -23,6 +23,10 @@ export default class Modality {
 	return this._modality;
     }
 
+    getNumberOfTraces() {
+	return 0;
+    }
+
     _getSlice(probe) {
 	return probe[this._position];
     }

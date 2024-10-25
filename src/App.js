@@ -32,7 +32,15 @@ function initializeAthena() {
 
     let athena = Athena.makeGlobalFromProbe(probesToLearn.shift());
     athena.setShouldLearn(() => shouldLearn);
-    athena.injectProbes(probesToLearn);
+    probesToLearn.forEach((probe) => {
+	athena.inject(probe);
+	console.log(athena.getNumberOfTraces());
+    });
+    probesToLearn.forEach((probe) => {
+	athena.inject(probe);
+	console.log(athena.getNumberOfTraces());
+    });
+    // athena.injectProbes(probesToLearn);
 
     shouldLearn = false;
 
