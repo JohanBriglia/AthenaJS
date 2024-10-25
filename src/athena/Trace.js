@@ -32,6 +32,10 @@ export default class Trace {
 	return this._modalities.map((modality) => modality.asNumbers());
     }
 
+    getNumberOfTraces() {
+	return 1 + this._modalities.reduce((i, modality) => modality.getNumberOfTraces(), 0);
+    }
+
     static fromProbe(probe) {
 	return new this({
 	    modalities: probe.map((modality, index) => {

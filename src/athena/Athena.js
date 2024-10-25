@@ -65,6 +65,10 @@ export default class Athena {
 	return { probe, results, activations, fluency, echo: this._echo };
     }
 
+    getNumberOfTraces() {
+	return this._traces.reduce((i, trace) => i + trace.getNumberOfTraces(), 0);
+    }
+
     _asModalities() {
 	let position = this._slice[0] || 0;
 
