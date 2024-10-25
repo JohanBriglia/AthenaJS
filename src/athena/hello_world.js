@@ -1,11 +1,12 @@
 import { double, makeIntegerProbes, range, repeat } from "./helpers.js";
 import Athena from "./Athena.js";
+import CoAthenas from "./CoAthenas.js";
 
 let allResults = [];
 let numberOfModalities = 10;
 let numberOfProbesToLearn = 40; // must be a multiple of numberOfModalities (min 2x)
 let numberOfRepetitions = numberOfProbesToLearn / (numberOfModalities * 2);
-let numberOfTests = 3;
+let numberOfTests = 1;
 
 console.log("tested ", numberOfTests, " times");
 console.log(numberOfModalities, " modalities");
@@ -17,7 +18,9 @@ range(1, numberOfTests).forEach((x) => {
     probesToLearn = repeat({ probes: probesToLearn, numberOfRepetitions });
     let shouldLearn = true;
 
-    let athena = Athena.makeGlobalFromProbe(probesToLearn.shift());
+    let firstProbe = probesToLearn.shift();
+    // let athena = new CoAthenas({ firstProbe, numberOfAthenas: 3 });
+    let athena = Athena.makeGlobalFromProbe(firstProbe);
     athena.setShouldLearn(() => shouldLearn);
     athena.injectProbes(probesToLearn);
 
